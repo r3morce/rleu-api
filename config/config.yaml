@@ -4,7 +4,7 @@
 api:
   base_url: "https://lldev.thespacedevs.com/2.3.0/launches/upcoming/"
   limit: 5
-  mode: "list"
+  mode: "detailed"
   format: "json"
 
 # Server settings
