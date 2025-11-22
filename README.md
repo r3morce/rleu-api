@@ -1,6 +1,6 @@
-# Stargazer Backend
+# Rocket Launch EU (RLEU) API
 
-A simple Go backend service that fetches and displays upcoming rocket launches using the [ThespaceDevs Launch Library API](https://thespacedevs.com/).
+A Go backend API service that fetches and displays upcoming European rocket launches using the [ThespaceDevs Launch Library API](https://thespacedevs.com/).
 
 ## What This Does
 
@@ -13,7 +13,7 @@ This backend provides a REST API endpoint that returns the next 5 upcoming rocke
 ## Project Structure
 
 ```
-stargazer-be/
+rleu-api/
 ├── cmd/
 │   └── server/
 │       └── main.go          # HTTP server and request handlers
@@ -66,9 +66,9 @@ european_pads:
    # Example output: 016fdcae-62e4-4cb2-b64e-fcc412d33242
    ```
 
-2. **Add to .env file**: Set the `STARGAZER_API_KEY` in your `.env` file:
+2. **Add to .env file**: Set the `RLEU_API_KEY` in your `.env` file:
    ```bash
-   STARGAZER_API_KEY=016fdcae-62e4-4cb2-b64e-fcc412d33242
+   RLEU_API_KEY=016fdcae-62e4-4cb2-b64e-fcc412d33242
    ```
 
 3. **Restart the server**: The API will now require this key for all requests
@@ -116,7 +116,7 @@ make run-debug
 
 1. **Clone or navigate to this repository**
    ```bash
-   cd stargazer-be
+   cd rleu-api
    ```
 
 2. **Set up environment variables**
@@ -124,25 +124,25 @@ make run-debug
    cp .env.example .env
    ```
 
-   Edit `.env` and set your `STARGAZER_API_KEY`:
+   Edit `.env` and set your `RLEU_API_KEY`:
    ```bash
    # Generate a key
    uuidgen
 
    # Add it to .env
-   STARGAZER_API_KEY=your-generated-key-here
+   RLEU_API_KEY=your-generated-key-here
    ```
 
    See the [API Authentication](#api-authentication) section for details.
 
 3. **Build the project**
    ```bash
-   go build -o stargazer-be ./cmd/server
+   go build -o rleu-api ./cmd/server
    ```
 
 4. **Run the server**
    ```bash
-   ./stargazer-be
+   ./rleu-api
    ```
    
    Or run directly without building:
@@ -159,7 +159,7 @@ make run-debug
 
    Or test in DEBUG mode (no auth required):
    ```bash
-   DEBUG=true ./stargazer-be
+   DEBUG=true ./rleu-api
    curl http://localhost:8080/launches
    ```
 
@@ -287,4 +287,3 @@ This is a personal learning project. Use it however you like!
 
 - Launch data provided by [ThespaceDevs Launch Library](https://thespacedevs.com/)
 - Built as a practice project after completing the boot.dev Go course
-# rleu-api
