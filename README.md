@@ -63,12 +63,12 @@ european_pads:
    ```bash
    # On macOS/Linux:
    uuidgen
-   # Example output: 016fdcae-62e4-4cb2-b64e-fcc412d33242
+   # Example output: a1b2c3d4-e5f6-7890-abcd-ef1234567890
    ```
 
 2. **Add to .env file**: Set the `RLEU_API_KEY` in your `.env` file:
    ```bash
-   RLEU_API_KEY=016fdcae-62e4-4cb2-b64e-fcc412d33242
+   RLEU_API_KEY=your-generated-api-key-here
    ```
 
 3. **Restart the server**: The API will now require this key for all requests
@@ -79,11 +79,11 @@ Clients must include the API key in the `Authorization` header:
 
 ```bash
 # Using Bearer format
-curl -H "Authorization: Bearer 016fdcae-62e4-4cb2-b64e-fcc412d33242" \
+curl -H "Authorization: Bearer YOUR_API_KEY" \
   http://localhost:8080/launches
 
 # Or using Token format
-curl -H "Authorization: Token 016fdcae-62e4-4cb2-b64e-fcc412d33242" \
+curl -H "Authorization: Token YOUR_API_KEY" \
   http://localhost:8080/launches
 ```
 
