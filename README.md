@@ -15,7 +15,7 @@ Go REST API for upcoming European rocket launch data with authentication and loc
 
 ```bash
 # 1. Clone and setup
-git clone <repo-url>
+git clone git@github.com:r3morce/rleu-api.git
 cd rleu-api
 cp .env.example .env
 
@@ -123,77 +123,6 @@ rleu-api/
 ├── config/                  # Configuration
 └── .env                     # Your secrets (git-ignored)
 ```
-
-## Troubleshooting
-
-### Port already in use
-```bash
-# Find process using port 8080
-lsof -i :8080
-# Kill it or change port in config/config.yaml
-```
-
-### Authentication errors
-```bash
-# Check your .env file exists
-cat .env
-
-# Verify API key is set
-grep RLEU_API_KEY .env
-
-# Test without auth in debug mode
-DEBUG=true go run ./cmd/server
-```
-
-### Build errors
-```bash
-# Verify Go version
-go version  # Should be 1.16+
-
-# Clean and rebuild
-go clean
-go build -o rleu-api ./cmd/server
-```
-
-### API returns no data
-- Check internet connection
-- Verify ThespaceDevs API is up
-- Try disabling European filtering in `config/config.yaml`
-
-## Configuration Reference
-
-### Environment Variables (.env)
-```bash
-RLEU_API_KEY=<uuid>          # Required: Your API authentication key
-DEBUG=false                   # Optional: Enable debug mode (true/false)
-SPACEDEVS_API_KEY=           # Optional: ThespaceDevs API key (higher limits)
-```
-
-### Config File (config/config.yaml)
-```yaml
-api:
-  base_url: "https://lldev.thespacedevs.com/2.3.0/launches/upcoming/"
-  limit: 5
-  mode: "list"
-  format: "json"
-
-server:
-  port: 8080
-  host: "localhost"
-
-european_pads:
-  enabled: true
-  location_ids: [159, 178, 157, 205]  # Sutherland, Esrange, SaxaVord
-  country_codes: ["FRA", "GBR", "SWE", "NOR", ...]
-```
-
-## Contributing
-
-Contributions welcome! See [UPCOMING.md](UPCOMING.md) for planned features.
-
-## License
-
-Personal learning project - use freely!
 
 ---
 
