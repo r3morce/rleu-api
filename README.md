@@ -124,6 +124,65 @@ rleu-api/
 └── .env                     # Your secrets (git-ignored)
 ```
 
+## Deployment
+
+### Fly.io (Recommended)
+
+Deploy to Fly.io with automatic HTTPS and European hosting:
+
+```bash
+# 1. Install Fly CLI
+curl -L https://fly.io/install.sh | sh
+
+# 2. Login
+fly auth login
+
+# 3. Launch app (follow prompts)
+fly launch
+
+# 4. Set your API key as a secret
+fly secrets set RLEU_API_KEY=your-generated-uuid-here
+
+# 5. Deploy
+fly deploy
+
+# 6. Check status
+fly status
+
+# Your API will be available at: https://rleu-api.fly.dev
+```
+
+**Configuration:**
+- Region: Amsterdam (`ams`) - European data center
+- Auto HTTPS with Let's Encrypt certificates
+- Auto-scaling: scales to zero when idle (free tier friendly)
+- Health checks on `/launches` endpoint
+
+**Update deployment:**
+```bash
+fly deploy
+```
+
+**View logs:**
+```bash
+fly logs
+```
+
+### Docker
+
+Build and run locally with Docker:
+
+```bash
+# Build
+docker build -t rleu-api .
+
+# Run
+docker run -p 8080:8080 -e RLEU_API_KEY=your-key-here rleu-api
+
+# Test
+curl -H "Authorization: Bearer your-key-here" http://localhost:8080/launches
+```
+
 ---
 
 **Data:** [ThespaceDevs Launch Library](https://thespacedevs.com/)

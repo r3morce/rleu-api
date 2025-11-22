@@ -1,0 +1,43 @@
+# Git files
+.git
+.gitignore
+
+# Environment files
+.env
+
+# Build artifacts
+rleu-api
+stargazer-be
+*.test
+*.out
+
+# Go dependency cache
+vendor/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Development and test files
+temp.json
+response.json
+response-det.json
+locations.json
+*pads.json
+req.sh
+req-det.sh
+
+# Documentation
+README.md
+UPCOMING.md
+AI.md
+
+# Fly.io
+fly.toml

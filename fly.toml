@@ -1,0 +1,28 @@
+# fly.toml - Fly.io configuration for Rocket Launch EU API
+
+app = "rleu-api"
+primary_region = "ams" # Amsterdam (Europe)
+
+[build]
+
+[env]
+  DEBUG = "false"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/launches"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
