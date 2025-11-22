@@ -170,7 +170,26 @@ fly logs
 
 ### Docker
 
-Build and run locally with Docker:
+**With Docker Compose (recommended for local development):**
+
+```bash
+# Start (reads .env file automatically)
+docker-compose up
+
+# Start in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+
+# Rebuild and start
+docker-compose up --build
+```
+
+**With Docker directly:**
 
 ```bash
 # Build
@@ -179,7 +198,12 @@ docker build -t rleu-api .
 # Run
 docker run -p 8080:8080 -e RLEU_API_KEY=your-key-here rleu-api
 
-# Test
+# Run in debug mode
+docker run -p 8080:8080 -e RLEU_API_KEY=your-key-here -e DEBUG=true rleu-api
+```
+
+**Test:**
+```bash
 curl -H "Authorization: Bearer your-key-here" http://localhost:8080/launches
 ```
 

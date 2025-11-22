@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  rleu-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rleu-api
+    ports:
+      - "8080:8080"
+    environment:
+      - RLEU_API_KEY=${RLEU_API_KEY}
+      - DEBUG=${DEBUG:-false}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/launches"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
