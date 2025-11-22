@@ -116,9 +116,12 @@ func (ld *LaunchDetailed) ToCompact() CompactLaunch {
 		Country:   "",
 	}
 
-	// Add country if available
+	// Add country if available from API
 	if ld.Pad.Location.CountryCode != nil {
 		compact.Country = *ld.Pad.Location.CountryCode
+	} else {
+		// Fall back to location name mapping
+		compact.Country = GetCountryCode(ld.Pad.Location.Name)
 	}
 
 	// Add mission patch URLs
