@@ -18,8 +18,16 @@ type ThrottleStatus struct {
 	Remaining int `json:"remaining"`
 }
 
-// FetchUpcomingLaunches calls ThespaceDevs API and returns upcoming launches
-func FetchUpcomingLaunches() (*LaunchResponse, error) {
+// LaunchResponseDetailed represents the detailed API response
+type LaunchResponseDetailed struct {
+	Count    int               `json:"count"`
+	Next     *string           `json:"next"`
+	Previous *string           `json:"previous"`
+	Results  []LaunchDetailed  `json:"results"`
+}
+
+// FetchUpcomingLaunches calls ThespaceDevs API and returns compact launch data
+func FetchUpcomingLaunches() (*CompactLaunchResponse, error) {
 	cfg := config.Get()
 	url := cfg.GetAPIURL()
 
@@ -51,10 +59,20 @@ func FetchUpcomingLaunches() (*LaunchResponse, error) {
 		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	var launchResponse LaunchResponse
-	err = json.Unmarshal(body, &launchResponse)
+	var detailedResponse LaunchResponseDetailed
+	err = json.Unmarshal(body, &detailedResponse)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse JSON response: %w", err)
+	}
+
+	// Convert to compact response
+	compactResponse := &CompactLaunchResponse{
+		Count:   detailedResponse.Count,
+		Results: make([]CompactLaunch, 0, len(detailedResponse.Results)),
+	}
+
+	for _, detailed := range detailedResponse.Results {
+		compactResponse.Results = append(compactResponse.Results, detailed.ToCompact())
 	}
 
 	// Check API throttle status in debug mode
@@ -62,7 +80,7 @@ func FetchUpcomingLaunches() (*LaunchResponse, error) {
 		checkThrottleStatus()
 	}
 
-	return &launchResponse, nil
+	return compactResponse, nil
 }
 
 // joinInts converts integer slice to comma-separated string

@@ -63,3 +63,75 @@ type License struct {
 	Priority int     `json:"priority"`
 	Link     *string `json:"link"`
 }
+
+// Detailed API response structures
+type Pad struct {
+	Name     string   `json:"name"`
+	Location Location `json:"location"`
+}
+
+type Location struct {
+	Name        string  `json:"name"`
+	CountryCode *string `json:"country_code"`
+}
+
+type MissionPatch struct {
+	Name      string `json:"name"`
+	ImageURL  string `json:"image_url"`
+	Priority  int    `json:"priority"`
+	Agency    *int   `json:"agency"`
+}
+
+// LaunchDetailed extends Launch with detailed fields
+type LaunchDetailed struct {
+	Name           string          `json:"name"`
+	NET            string          `json:"net"`
+	Pad            Pad             `json:"pad"`
+	MissionPatches []MissionPatch  `json:"mission_patches"`
+	Image          *Image          `json:"image"`
+}
+
+// CompactLaunch is the simplified response for the API
+type CompactLaunch struct {
+	Name           string   `json:"name"`
+	StartTime      string   `json:"start_time"`
+	Location       string   `json:"location"`
+	Country        string   `json:"country"`
+	MissionPatches []string `json:"mission_patches,omitempty"`
+	ImageURL       string   `json:"image_url,omitempty"`
+}
+
+// CompactLaunchResponse is the compact API response
+type CompactLaunchResponse struct {
+	Count   int             `json:"count"`
+	Results []CompactLaunch `json:"results"`
+}
+
+// ToCompact converts a LaunchDetailed to CompactLaunch
+func (ld *LaunchDetailed) ToCompact() CompactLaunch {
+	compact := CompactLaunch{
+		Name:      ld.Name,
+		StartTime: ld.NET,
+		Location:  ld.Pad.Location.Name,
+		Country:   "",
+	}
+
+	// Add country if available
+	if ld.Pad.Location.CountryCode != nil {
+		compact.Country = *ld.Pad.Location.CountryCode
+	}
+
+	// Add mission patch URLs
+	for _, patch := range ld.MissionPatches {
+		if patch.ImageURL != "" {
+			compact.MissionPatches = append(compact.MissionPatches, patch.ImageURL)
+		}
+	}
+
+	// Add image URL if available
+	if ld.Image != nil {
+		compact.ImageURL = ld.Image.ImageURL
+	}
+
+	return compact
+}
