@@ -1,5 +1,10 @@
 # Rocket Launch EU API
 
+[![Go Version](https://img.shields.io/badge/Go-1.25-00ADD8?style=flat&logo=go)](https://golang.org)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](LICENSE)
+[![API](https://img.shields.io/badge/API-ThespaceDevs-orange?style=flat&logo=rocket)](https://thespacedevs.com/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
+
 Go REST API for upcoming European rocket launch data with authentication and location filtering.
 
 ## Quick Start
