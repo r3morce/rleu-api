@@ -1,0 +1,42 @@
+# Rocket Launch EU API Configuration
+
+# API settings
+api:
+  base_url: "https://lldev.thespacedevs.com/2.3.0/launches/upcoming/"
+  limit: 5
+  mode: "list"
+  format: "json"
+
+# Server settings
+server:
+  port: 8080
+  host: "localhost"
+
+# European launch pads configuration
+european_pads:
+  enabled: true
+  # European launch pad IDs for filtering
+  location_ids:
+    - 159  # Launch Complex, Sutherland Spaceport (UK)
+    - 178  # Launch Complex 3C, Esrange Space Center (Sweden)
+    - 157  # Launch Complex 3B, Esrange Space Center (Sweden)
+    - 205  # Launch Pad Fredo, SaxaVord Spaceport (UK)
+  # Country codes for European launches (ISO 3166-1 alpha-2)
+  country_codes:
+    - "FRA"  # France
+    - "GBR"  # United Kingdom
+    - "DEU"  # Germany
+    - "ITA"  # Italy
+    - "ESP"  # Spain
+    - "SWE"  # Sweden
+    - "NOR"  # Norway
+    - "FIN"  # Finland
+    - "DNK"  # Denmark
+    - "NLD"  # Netherlands
+    - "BEL"  # Belgium
+    - "AUT"  # Austria
+    - "CHE"  # Switzerland
+    - "PRT"  # Portugal
+    - "GRC"  # Greece
+    - "POL"  # Poland
+    - "IRL"  # Ireland
