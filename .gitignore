@@ -1,0 +1,34 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build artifacts
+rleu-api
+stargazer-be
+*.test
+*.out
+
+# Go dependency directories
+vendor/
+
+# Environment variables (IMPORTANT: Never commit secrets!)
+.env
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+temp.json
+response.json
+*pads.json
