@@ -7,6 +7,10 @@
 
 Go REST API for upcoming European rocket launch data with authentication and location filtering.
 
+> **⚠️ Development API Notice**
+> This project currently uses the ThespaceDevs **development API** (`lldev.thespacedevs.com`).
+> **Not intended for production use.** For production deployments, switch to the production API endpoint and obtain a proper API key from [ThespaceDevs](https://thespacedevs.com/).
+
 ## Quick Start
 
 ```bash
