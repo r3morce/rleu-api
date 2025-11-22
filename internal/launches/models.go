@@ -86,6 +86,8 @@ type MissionPatch struct {
 type LaunchDetailed struct {
 	Name           string          `json:"name"`
 	NET            string          `json:"net"`
+	WindowStart    string          `json:"window_start"`
+	WindowEnd      string          `json:"window_end"`
 	Pad            Pad             `json:"pad"`
 	MissionPatches []MissionPatch  `json:"mission_patches"`
 	Image          *Image          `json:"image"`
@@ -94,7 +96,9 @@ type LaunchDetailed struct {
 // CompactLaunch is the simplified response for the API
 type CompactLaunch struct {
 	Name           string   `json:"name"`
-	StartTime      string   `json:"start_time"`
+	NET            string   `json:"net"`
+	WindowStart    string   `json:"window_start"`
+	WindowEnd      string   `json:"window_end"`
 	Location       string   `json:"location"`
 	Country        string   `json:"country"`
 	MissionPatches []string `json:"mission_patches,omitempty"`
@@ -110,10 +114,12 @@ type CompactLaunchResponse struct {
 // ToCompact converts a LaunchDetailed to CompactLaunch
 func (ld *LaunchDetailed) ToCompact() CompactLaunch {
 	compact := CompactLaunch{
-		Name:      ld.Name,
-		StartTime: ld.NET,
-		Location:  ld.Pad.Location.Name,
-		Country:   "",
+		Name:        ld.Name,
+		NET:         ld.NET,
+		WindowStart: ld.WindowStart,
+		WindowEnd:   ld.WindowEnd,
+		Location:    ld.Pad.Location.Name,
+		Country:     "",
 	}
 
 	// Add country if available from API
