@@ -22,6 +22,11 @@ func main() {
 		log.Printf("Config loaded: API limit=%d, Server port=%d", cfg.API.Limit, cfg.Server.Port)
 	}
 
+	// Initialize pad cache on startup
+	if err := launches.InitializeCache(); err != nil {
+		log.Printf("Warning: Failed to initialize cache: %v", err)
+	}
+
 	http.HandleFunc("/health", handleHealth)
 	http.HandleFunc("/launches", authMiddleware(handleLaunches))
 

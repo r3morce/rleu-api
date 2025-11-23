@@ -4,7 +4,7 @@
 api:
   base_url: "https://lldev.thespacedevs.com/2.3.0/launches/upcoming/"
   limit: 1
-  mode: "list"
+  mode: "normal"
   format: "json"
   use_production_image: true  # Replace -dev with -prod in image URLs
 

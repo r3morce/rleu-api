@@ -71,14 +71,23 @@ type License struct {
 }
 
 // Detailed API response structures
+type Country struct {
+	Alpha2Code string `json:"alpha_2_code"`
+	Alpha3Code string `json:"alpha_3_code"`
+	Name       string `json:"name"`
+}
+
 type Pad struct {
+	ID       int      `json:"id"`
 	Name     string   `json:"name"`
+	Country  *Country `json:"country"`
 	Location Location `json:"location"`
 }
 
 type Location struct {
-	Name        string  `json:"name"`
-	CountryCode *string `json:"country_code"`
+	ID      int      `json:"id"`
+	Name    string   `json:"name"`
+	Country *Country `json:"country"`
 }
 
 type MissionPatch struct {
@@ -86,6 +95,11 @@ type MissionPatch struct {
 	ImageURL  string `json:"image_url"`
 	Priority  int    `json:"priority"`
 	Agency    *int   `json:"agency"`
+}
+
+// SimplePad is the minimal pad structure in normal/list mode
+type SimplePad struct {
+	ID int `json:"id"`
 }
 
 // LaunchDetailed extends Launch with detailed fields
@@ -97,6 +111,25 @@ type LaunchDetailed struct {
 	Pad            Pad             `json:"pad"`
 	MissionPatches []MissionPatch  `json:"mission_patches"`
 	Image          *Image          `json:"image"`
+}
+
+// LaunchNormal represents a launch in normal/list mode (minimal data)
+type LaunchNormal struct {
+	Name           string         `json:"name"`
+	NET            string         `json:"net"`
+	WindowStart    string         `json:"window_start"`
+	WindowEnd      string         `json:"window_end"`
+	Pad            SimplePad      `json:"pad"`
+	MissionPatches []MissionPatch `json:"mission_patches"`
+	Image          *Image         `json:"image"`
+}
+
+// LaunchResponseNormal is the response for normal/list mode
+type LaunchResponseNormal struct {
+	Count    int            `json:"count"`
+	Next     *string        `json:"next"`
+	Previous *string        `json:"previous"`
+	Results  []LaunchNormal `json:"results"`
 }
 
 // CompactLaunch is the simplified response for the API
@@ -128,20 +161,30 @@ func transformImageURL(url string) string {
 
 // ToCompact converts a LaunchDetailed to CompactLaunch
 func (ld *LaunchDetailed) ToCompact() CompactLaunch {
+	locationName := ""
+	if ld.Pad.Location.Name != "" {
+		locationName = ld.Pad.Location.Name
+	} else {
+		locationName = ld.Pad.Name
+	}
+
 	compact := CompactLaunch{
 		Name:        ld.Name,
 		NET:         ld.NET,
 		WindowStart: ld.WindowStart,
 		WindowEnd:   ld.WindowEnd,
-		Location:    ld.Pad.Location.Name,
+		Location:    locationName,
 		Country:     "",
 	}
 
-	// Add country if available from API
-	if ld.Pad.Location.CountryCode != nil {
-		compact.Country = *ld.Pad.Location.CountryCode
+	// Get country code from API response
+	// Priority: Pad.Country > Location.Country > fallback to mapping
+	if ld.Pad.Country != nil && ld.Pad.Country.Alpha2Code != "" {
+		compact.Country = ld.Pad.Country.Alpha2Code
+	} else if ld.Pad.Location.Country != nil && ld.Pad.Location.Country.Alpha2Code != "" {
+		compact.Country = ld.Pad.Location.Country.Alpha2Code
 	} else {
-		// Fall back to location name mapping
+		// Fall back to location name mapping for older data
 		compact.Country = GetCountryCode(ld.Pad.Location.Name)
 	}
 
@@ -159,3 +202,37 @@ func (ld *LaunchDetailed) ToCompact() CompactLaunch {
 
 	return compact
 }
+
+// ToCompact converts a LaunchNormal to CompactLaunch using cached pad data
+func (ln *LaunchNormal) ToCompact() CompactLaunch {
+	compact := CompactLaunch{
+		Name:        ln.Name,
+		NET:         ln.NET,
+		WindowStart: ln.WindowStart,
+		WindowEnd:   ln.WindowEnd,
+		Location:    "",
+		Country:     "",
+	}
+
+	// Try to get pad info from cache
+	cache := GetPadCache()
+	if info, ok := cache.GetPadInfo(ln.Pad.ID); ok {
+		compact.Location = info.LocationName
+		compact.Country = info.CountryCode
+	}
+
+	// Add mission patch URLs
+	for _, patch := range ln.MissionPatches {
+		if patch.ImageURL != "" {
+			compact.MissionPatches = append(compact.MissionPatches, transformImageURL(patch.ImageURL))
+		}
+	}
+
+	// Add image URL if available
+	if ln.Image != nil {
+		compact.ImageURL = transformImageURL(ln.Image.ImageURL)
+	}
+
+	return compact
+}
+

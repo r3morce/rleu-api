@@ -26,8 +26,32 @@ type LaunchResponseDetailed struct {
 	Results  []LaunchDetailed  `json:"results"`
 }
 
+// InitializeCache populates the pad cache on startup
+func InitializeCache() error {
+	cache := GetPadCache()
+
+	// Refresh cache if stale or empty
+	if cache.IsStale() {
+		log.Println("Initializing pad cache...")
+		if err := cache.FetchAndCachePads(); err != nil {
+			return fmt.Errorf("failed to initialize cache: %w", err)
+		}
+		log.Println("Pad cache initialized successfully")
+	}
+
+	return nil
+}
+
 // FetchUpcomingLaunches calls ThespaceDevs API and returns compact launch data
 func FetchUpcomingLaunches() (*CompactLaunchResponse, error) {
+	// Ensure cache is populated
+	cache := GetPadCache()
+	if cache.IsStale() {
+		if err := cache.FetchAndCachePads(); err != nil {
+			log.Printf("Warning: failed to refresh cache: %v", err)
+		}
+	}
+
 	cfg := config.Get()
 	url := cfg.GetAPIURL()
 
@@ -59,20 +83,20 @@ func FetchUpcomingLaunches() (*CompactLaunchResponse, error) {
 		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	var detailedResponse LaunchResponseDetailed
-	err = json.Unmarshal(body, &detailedResponse)
+	var normalResponse LaunchResponseNormal
+	err = json.Unmarshal(body, &normalResponse)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse JSON response: %w", err)
 	}
 
 	// Convert to compact response
 	compactResponse := &CompactLaunchResponse{
-		Count:   detailedResponse.Count,
-		Results: make([]CompactLaunch, 0, len(detailedResponse.Results)),
+		Count:   normalResponse.Count,
+		Results: make([]CompactLaunch, 0, len(normalResponse.Results)),
 	}
 
-	for _, detailed := range detailedResponse.Results {
-		compactResponse.Results = append(compactResponse.Results, detailed.ToCompact())
+	for _, normal := range normalResponse.Results {
+		compactResponse.Results = append(compactResponse.Results, normal.ToCompact())
 	}
 
 	// Check API throttle status in debug mode
