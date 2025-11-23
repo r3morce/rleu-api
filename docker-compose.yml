@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   rleu-api:
     build:
@@ -9,8 +7,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - RLEU_API_KEY=${RLEU_API_KEY}
-      - DEBUG=${DEBUG:-false}
+      - RLEU_API_KEY=${RLEU_API_KEY:-}
+      - DEBUG=${DEBUG:-true}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/launches"]

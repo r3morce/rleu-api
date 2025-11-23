@@ -6,6 +6,7 @@ api:
   limit: 1
   mode: "detailed"
   format: "json"
+  use_production_image: true  # Replace -dev with -prod in image URLs
 
 # Server settings
 server:

@@ -17,11 +17,12 @@ type Config struct {
 
 // APIConfig holds API-related settings
 type APIConfig struct {
-	BaseURL string `yaml:"base_url"`
-	Limit   int    `yaml:"limit"`
-	Mode    string `yaml:"mode"`
-	Format  string `yaml:"format"`
-	Key     string `yaml:"key"` // Stargazer API key from environment
+	BaseURL            string `yaml:"base_url"`
+	Limit              int    `yaml:"limit"`
+	Mode               string `yaml:"mode"`
+	Format             string `yaml:"format"`
+	Key                string `yaml:"key"`                  // Stargazer API key from environment
+	UseProductionImage bool   `yaml:"use_production_image"` // Replace -dev with -prod in image URLs
 }
 
 // ServerConfig holds server settings

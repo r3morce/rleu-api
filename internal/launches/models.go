@@ -1,5 +1,11 @@
 package launches
 
+import (
+	"strings"
+
+	"rleu-api/config"
+)
+
 // Data structures matching the ThespaceDevs API response
 
 // LaunchResponse is the top-level API response
@@ -111,6 +117,15 @@ type CompactLaunchResponse struct {
 	Results []CompactLaunch `json:"results"`
 }
 
+// transformImageURL replaces -dev with -prod in image URLs if configured
+func transformImageURL(url string) string {
+	cfg := config.Get()
+	if cfg.API.UseProductionImage {
+		return strings.ReplaceAll(url, "-dev", "-prod")
+	}
+	return url
+}
+
 // ToCompact converts a LaunchDetailed to CompactLaunch
 func (ld *LaunchDetailed) ToCompact() CompactLaunch {
 	compact := CompactLaunch{
@@ -133,13 +148,13 @@ func (ld *LaunchDetailed) ToCompact() CompactLaunch {
 	// Add mission patch URLs
 	for _, patch := range ld.MissionPatches {
 		if patch.ImageURL != "" {
-			compact.MissionPatches = append(compact.MissionPatches, patch.ImageURL)
+			compact.MissionPatches = append(compact.MissionPatches, transformImageURL(patch.ImageURL))
 		}
 	}
 
 	// Add image URL if available
 	if ld.Image != nil {
-		compact.ImageURL = ld.Image.ImageURL
+		compact.ImageURL = transformImageURL(ld.Image.ImageURL)
 	}
 
 	return compact
