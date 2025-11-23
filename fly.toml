@@ -1,28 +1,23 @@
-# fly.toml - Fly.io configuration for Rocket Launch EU API
+# fly.toml app configuration file generated for rleu-api on 2025-11-23T07:30:47Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "rleu-api"
-primary_region = "ams" # Amsterdam (Europe)
+app = 'rleu-api'
+primary_region = 'ams'
 
 [build]
-
-[env]
-  DEBUG = "false"
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-
-  [[http_service.checks]]
-    grace_period = "10s"
-    interval = "30s"
-    method = "GET"
-    timeout = "5s"
-    path = "/health"
+  processes = ['app']
 
 [[vm]]
-  memory = "256mb"
-  cpu_kind = "shared"
+  memory = '256mb'
+  cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256
