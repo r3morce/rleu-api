@@ -22,6 +22,7 @@ func main() {
 		log.Printf("Config loaded: API limit=%d, Server port=%d", cfg.API.Limit, cfg.Server.Port)
 	}
 
+	http.HandleFunc("/health", handleHealth)
 	http.HandleFunc("/launches", authMiddleware(handleLaunches))
 
 	serverAddr := cfg.GetServerAddress()
@@ -29,6 +30,18 @@ func main() {
 	fmt.Printf("📡 Try visiting: http://localhost%s/launches\n", serverAddr)
 
 	log.Fatal(http.ListenAndServe(serverAddr, nil))
+}
+
+// handleHealth returns a simple health check response
+func handleHealth(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status":"healthy"}`))
 }
 
 // authMiddleware validates the API key from the Authorization header
