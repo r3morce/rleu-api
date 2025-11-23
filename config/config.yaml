@@ -3,7 +3,7 @@
 # API settings
 api:
   base_url: "https://lldev.thespacedevs.com/2.3.0/launches/upcoming/"
-  limit: 5
+  limit: 1
   mode: "detailed"
   format: "json"
 
